@@ -42,27 +42,46 @@ namespace BankHeist
         TheSquad.Add(givenName, TeamMember);
         // System.Console.WriteLine($"Your esteemed team leader, {TeamMember.Name}, has a skill level of {TeamMember.SkillLevel} and a courage factor of {TeamMember.CourageFactor}");
       }
-      int bankDifficulty = 100;
-      Random r = new Random();
-      int luckValue = r.Next(-10, 11);
-      bankDifficulty += luckValue;
+      System.Console.WriteLine("How many times would you like to attempt to rob this bank?");
+      string trialRuns = Console.ReadLine();
+      int trialRunsInt = int.Parse(trialRuns);
+      System.Console.WriteLine("How difficult is this bank?");
+      string bankDifficultyString = Console.ReadLine();
+
 
       int teamSkillLevel = 0;
       foreach (KeyValuePair<string, TeamMember> member in TheSquad)
       {
         teamSkillLevel += member.Value.SkillLevel;
       }
-
-      System.Console.WriteLine($"Your team skill level is {teamSkillLevel}. The bank's difficulty level is {bankDifficulty}");
-
-      if (teamSkillLevel >= bankDifficulty)
+      int successfulRobberies = 0;
+      for (int i = 0; i < trialRunsInt; i++)
       {
-        System.Console.WriteLine("You robbed the crap out of that bank");
+        int bankDifficulty = int.Parse(bankDifficultyString);
+
+        Random r = new Random();
+        int luckValue = r.Next(-10, 11);
+        bankDifficulty += luckValue;
+
+        System.Console.WriteLine($"Your team skill level is {teamSkillLevel}. The bank's difficulty level is {bankDifficulty}\n");
+
+        if (teamSkillLevel >= bankDifficulty)
+        {
+          System.Console.WriteLine("You robbed the crap out of that bank");
+          System.Console.WriteLine();
+          successfulRobberies++;
+        }
+        else
+        {
+          System.Console.WriteLine("Wow you got caught immediately, not great");
+          System.Console.WriteLine();
+        }
       }
-      else
-      {
-        System.Console.WriteLine("Wow you got caught immediately, not great");
-      }
+      System.Console.WriteLine($"You successfully robbed the bank {successfulRobberies} out of {trialRunsInt} attempts");
+      System.Console.WriteLine();
+
+
+
     }
   }
 }
