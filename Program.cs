@@ -19,10 +19,10 @@ namespace BankHeist
         {
           break;
         }
-        System.Console.WriteLine("What's your team member's skill level? Must be a positive integer less than or equal to 10.");
+        System.Console.WriteLine("What's your team member's skill level? Must be a positive integer less than or equal to 25.");
         string MemberSkillLevel = Console.ReadLine();
         int MemberSkillInt = int.Parse(MemberSkillLevel);
-        while (MemberSkillInt < 0 || MemberSkillInt > 10)
+        while (MemberSkillInt < 0 || MemberSkillInt > 25)
         {
           System.Console.WriteLine("Invalid input, please try again.");
           MemberSkillLevel = Console.ReadLine();
@@ -40,11 +40,28 @@ namespace BankHeist
         }
         TeamMember.CourageFactor = MemberCourageFloat;
         TheSquad.Add(givenName, TeamMember);
-        System.Console.WriteLine($"Your esteemed team leader, {TeamMember.Name}, has a skill level of {TeamMember.SkillLevel} and a courage factor of {TeamMember.CourageFactor}");
-        foreach (KeyValuePair<string,TeamMember> member in TheSquad)
-        {
-            System.Console.WriteLine(member.Key);
-        }
+        // System.Console.WriteLine($"Your esteemed team leader, {TeamMember.Name}, has a skill level of {TeamMember.SkillLevel} and a courage factor of {TeamMember.CourageFactor}");
+      }
+      int bankDifficulty = 100;
+      Random r = new Random();
+      int luckValue = r.Next(-10, 11);
+      bankDifficulty += luckValue;
+
+      int teamSkillLevel = 0;
+      foreach (KeyValuePair<string, TeamMember> member in TheSquad)
+      {
+        teamSkillLevel += member.Value.SkillLevel;
+      }
+
+      System.Console.WriteLine($"Your team skill level is {teamSkillLevel}. The bank's difficulty level is {bankDifficulty}");
+
+      if (teamSkillLevel >= bankDifficulty)
+      {
+        System.Console.WriteLine("You robbed the crap out of that bank");
+      }
+      else
+      {
+        System.Console.WriteLine("Wow you got caught immediately, not great");
       }
     }
   }
