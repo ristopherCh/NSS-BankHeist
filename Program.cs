@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Linq;
+using System.Collections;
 
 namespace BankHeist
 {
@@ -7,36 +10,183 @@ namespace BankHeist
   {
     static void Main(string[] args)
     {
+      int val = 5;
       Muscle muscleyTerry = new Muscle();
       muscleyTerry.Name = "muscleyTerry";
+      muscleyTerry.SkillLevel = 15*val;
+      muscleyTerry.PercentageCut = 15;
+
       Muscle muscleyPatrick = new Muscle();
       muscleyPatrick.Name = "muscleyPatrick";
+      muscleyPatrick.SkillLevel = 15*val;
+      muscleyPatrick.PercentageCut = 15;
+
       Hacker hackerRoger = new Hacker();
+      hackerRoger.SkillLevel = 20*val;
+      hackerRoger.PercentageCut = 20;
       hackerRoger.Name = "hackerRoger";
       Hacker hackerPete = new Hacker();
+      hackerPete.SkillLevel = 25*val;
+      hackerPete.PercentageCut = 25;
       hackerPete.Name = "hackerPete";
-      LockSpecialist lockerWill = new LockSpecialist();
-      lockerWill.Name = "lockerWill";
-      LockSpecialist lockerAna = new LockSpecialist();
 
-      
+      LockSpecialist lockerWill = new LockSpecialist();
+      lockerWill.SkillLevel = 30*val;
+      lockerWill.PercentageCut = 30;
+      lockerWill.Name = "lockerWill";
+
+      LockSpecialist lockerAna = new LockSpecialist();
+      lockerAna.SkillLevel = 12*val;
+      lockerAna.PercentageCut = 12;
+      lockerAna.Name = "lockerAna";
+
+
       List<IRobber> rolodex = new()
       {
-        muscleyTerry, 
-        muscleyPatrick, 
-        hackerPete, 
-        hackerRoger, 
-        lockerWill, 
+        muscleyTerry,
+        muscleyPatrick,
+        hackerPete,
+        hackerRoger,
+        lockerWill,
         lockerAna
       };
 
-      Console.WriteLine("Plan your heist!");
-      Dictionary<string, TeamMember> TheSquad = new();
-      
-      
-      
-      
-      
+      // foreach (IRobber teamMember in rolodex)
+      // {
+      //   System.Console.WriteLine(teamMember.Name);
+      // }
+
+      // while (true)
+      // {
+      //   System.Console.WriteLine("Give a name to a new team member:");
+      //   string newMemberName = Console.ReadLine();
+      //   if (newMemberName == "")
+      //   {
+      //     break;
+      //   }
+      //   System.Console.WriteLine("What's this new member's cut?");
+      //   string newMemberCutString = Console.ReadLine();
+      //   int newMemberCut = int.Parse(newMemberCutString);
+      //   System.Console.WriteLine("What's the new member's specialty? Choose from: 1) Hacker, 2) Muscle, or 3) LockSpecialist");
+      //   string newMemberSpecialty = Console.ReadLine();
+      //   System.Console.WriteLine("What's the new member's skill level?");
+      //   string newMemberSkillString = Console.ReadLine();
+      //   int newMemberSkillLevel = int.Parse(newMemberSkillString);
+      //   if (newMemberSpecialty == "1")
+      //   {
+      //     Hacker newMember = new Hacker();
+      //     newMember.Name = newMemberName;
+      //     newMember.PercentageCut = newMemberCut;
+      //     newMember.SkillLevel = newMemberSkillLevel;
+      //     rolodex.Add(newMember);
+      //   }
+      //   else if (newMemberSpecialty == "2")
+      //   {
+      //     Muscle newMember = new Muscle();
+      //     newMember.Name = newMemberName;
+      //     newMember.PercentageCut = newMemberCut;
+      //     newMember.SkillLevel = newMemberSkillLevel;
+      //     rolodex.Add(newMember);
+      //   }
+      //   else if (newMemberSpecialty == "3")
+      //   {
+      //     LockSpecialist newMember = new LockSpecialist();
+      //     newMember.Name = newMemberName;
+      //     newMember.PercentageCut = newMemberCut;
+      //     newMember.SkillLevel = newMemberSkillLevel;
+      //     rolodex.Add(newMember);
+      //   }
+      // }
+
+      System.Console.WriteLine("Let's start a HEIST!");
+
+      Random r = new Random();
+      Bank RichBank = new Bank();
+      RichBank.CashOnHand = r.Next(50000, 1000000);
+      RichBank.AlarmScore = r.Next(100);
+      RichBank.VaultScore = r.Next(100);
+      RichBank.SecurityGuardScore = r.Next(100);
+
+      Dictionary<string, int> BankScores = new Dictionary<string, int>();
+
+      BankScores.Add("Alarm", RichBank.AlarmScore);
+      BankScores.Add("Vault", RichBank.VaultScore);
+      BankScores.Add("Security Guards", RichBank.SecurityGuardScore);
+
+
+      // string keyOfMaxValue = BankScores.Where(x => x.Value == BankScores.Values.Max()).Select(x=>x.Key).First();
+      // string keyOfMaxValue = BankScores.OrderByDescending(x => x.Value).First().Key;
+      string keyOfMaxValue = BankScores.Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
+      string keyOfMinValue = BankScores.Aggregate((x, y) => x.Value < y.Value ? x : y).Key;
+
+      System.Console.WriteLine($"Recon time! Most secure: {keyOfMaxValue}. Least secure: {keyOfMinValue}");
+
+      List<IRobber> crew = new();
+      int totalledTake = 0;
+      while (true)
+      {
+        for (int i = 0; i < rolodex.Count; i++)
+        {
+          IRobber teamMember = rolodex[i];
+          if (totalledTake + teamMember.PercentageCut < 100)
+          {
+            System.Console.WriteLine($@"
+            {i}: {teamMember.Name}: {teamMember.StateSpecialty()}
+              Skill level: {teamMember.SkillLevel}
+              Percentage cut: {teamMember.PercentageCut}
+        ");
+          }
+        }
+        System.Console.WriteLine("Which operative would you like to add to your crew?");
+        string crewMemberString = Console.ReadLine();
+        if (crewMemberString == "")
+        {
+          break;
+        }
+        int crewMember = int.Parse(crewMemberString);
+        totalledTake += rolodex[crewMember].PercentageCut;
+        crew.Add(rolodex[crewMember]);
+        rolodex.RemoveAt(crewMember);
+      }
+
+      System.Console.WriteLine("Ok now we're REALLY starting this heist!");
+
+      foreach (IRobber teamMember in crew)
+      {
+        teamMember.PerformSkill(RichBank);
+      }
+
+      if (RichBank.IsSecure)
+      {
+        System.Console.WriteLine("This bank is secure. You're in prison. What were you thinking.");
+      }
+      else
+      {
+        System.Console.WriteLine($@"YOU DID IT! Here's the breakdown:");
+        foreach(IRobber teamMember in crew) 
+        {
+          float perc = (float)teamMember.PercentageCut / 100;
+          System.Console.WriteLine($"{teamMember.Name}: ${perc*RichBank.CashOnHand}");
+        }
+      }
+
+
+
+
+
+
+
+
+
+
+
+      // Console.WriteLine("Plan your heist!");
+      // Dictionary<string, TeamMember> TheSquad = new();
+
+
+
+
+
       // while (true)
       // {
       //   TeamMember TeamMember = new();
@@ -51,7 +201,7 @@ namespace BankHeist
       //   string MemberSkillLevel = Console.ReadLine();
       //   int MemberSkillInt = int.Parse(MemberSkillLevel);
       //   while (MemberSkillInt < 0 || MemberSkillInt > 25)
-      //   {
+      //   {D
       //     System.Console.WriteLine("Invalid input, please try again.");
       //     MemberSkillLevel = Console.ReadLine();
       //     MemberSkillInt = int.Parse(MemberSkillLevel);

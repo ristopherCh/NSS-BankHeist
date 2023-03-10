@@ -4,6 +4,13 @@ namespace BankHeist
   {
     public string Name { get; set; }
     public int SkillLevel { get; set; }
+    public int PercentageCut { get; set; }
+
+    public string StateSpecialty()
+    {
+      return this.GetType().Name;
+    }
+
     public void PerformSkill(Bank bank)
     {
       bank.AlarmScore -= this.SkillLevel;
