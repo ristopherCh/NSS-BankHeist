@@ -10,7 +10,7 @@ namespace BankHeist
     {
       get
       {
-        return !(CashOnHand < 0 && AlarmScore < 0 && VaultScore < 0 && SecurityGuardScore < 0);
+        return !(AlarmScore < 0 && VaultScore < 0 && SecurityGuardScore < 0);
       }
     }
   }
